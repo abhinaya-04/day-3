@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>object task</title>
+  <style>
+    h1{
+        text-align: center;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background-color:lightgray;
+    }
+    #input-container {
+      text-align: center;
+    }
+
+    #result-container {
+      margin-top: 20px;
+    }
+
+    .result-entry {
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+
+<body>
+    <h1>DAY-3 TASK</h1>
+  <div id="input-container">
+   
+    <label for="Name">Name:</label>
+    <input type="text" id="name">
+     <br> <br>
+    <label for="age">Age:</label>
+    <input type="number" id="age">
+    <br> <br>
+    <label for="marks">Marks:</label>
+    <input type="number" id="marks">
+    <br><br>
+    <button onclick="addEntry()">Add Entry</button>
+  </div>
+
+  <div id="result-container"></div>
+
+  <script>
+    const inputObject = {};
+
+    function addEntry() {
+      const name = document.getElementById('name').value;
+      const age = parseInt(document.getElementById('age').value);
+      const marks = parseInt(document.getElementById('marks').value);
+
+      if (name && age && marks) {
+        const newEntry = {
+          age: age,
+          name: name,
+          marks: marks.toString(),
+        };
+
+    
+        const nextIndex = Object.keys(inputObject).length;
+        inputObject[nextIndex] = newEntry;
+
+
+        document.getElementById('name').value = '';
+        document.getElementById('age').value = '';
+        document.getElementById('marks').value = '';
+
+        displayResults();
+      }
+    }
+
+    function getObject(obj) {
+      const marksMap = new Map();
+
+      for (const key in obj) {
+        const entry = obj[key];
+        const marks = entry.marks;
+        if (!marksMap.has(marks) || entry.age > marksMap.get(marks).age) {
+          marksMap.set(marks, {
+            age: entry.age,
+            name: entry.name,
+            marks: marks,
+          });
+        }
+      }
+
+      const resultObject = {};
+      let resultIndex = 0;
+
+      for (const [marks, entry] of marksMap.entries()) {
+        resultObject[resultIndex] = {
+          age: entry.age,
+          name: entry.name,
+          marks: marks,
+        };
+        resultIndex++;
+      }
+
+      return resultObject;
+    }
+
+    function displayResults() {
+      const resultContainer = document.getElementById('result-container');
+      resultContainer.innerHTML = '';
+
+      const result = getObject(inputObject);
+
+      for (const key in result) {
+        const entry = result[key];
+        const resultElement = document.createElement('div');
+        resultElement.classList.add('result-entry');
+        resultElement.textContent = `Name: ${entry.name}, Age: ${entry.age}, Marks: ${entry.marks}`;
+        resultContainer.appendChild(resultElement);
+      }
+    }
+
+    // Initial display of results (when the page loads)
+    displayResults();
+  </script>
+</body>
+
+</html>
